@@ -73,6 +73,13 @@ namespace ros2_canopen
                   uint8_t node_id,
                   std::shared_ptr<ros2_canopen::ConfigurationManager>  config) noexcept override;
 
+        double get_position() {
+            return mc_driver_->get_position();
+        }
+
+        double get_speed(){
+            return mc_driver_->get_speed();
+        }
     protected:
         virtual void on_rpdo(COData data) override
         {
