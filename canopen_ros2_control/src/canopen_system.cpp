@@ -102,7 +102,6 @@ hardware_interface::CallbackReturn CanopenSystem::on_configure(
 
 hardware_interface::CallbackReturn CanopenSystem::on_cleanup(
   const rclcpp_lifecycle::State &previous_state) {
-
   clean();
   return CallbackReturn::SUCCESS;
 
