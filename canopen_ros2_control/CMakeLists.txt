@@ -59,14 +59,19 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_add_gmock(test_canopen_system test/test_canopen_system.cpp)
-target_include_directories(test_canopen_system PRIVATE include)
-ament_target_dependencies(
-  test_canopen_system
-  hardware_interface
-  pluginlib
-  ros2_control_test_assets
-)
+if(BUILD_TESTING)
+  find_package(launch_testing_ament_cmake)
+  find_package(ament_cmake_gmock)
+
+  ament_add_gmock(test_canopen_system test/test_canopen_system.cpp)
+  target_include_directories(test_canopen_system PRIVATE include)
+  ament_target_dependencies(
+    test_canopen_system
+    hardware_interface
+    pluginlib
+    ros2_control_test_assets
+  )
+endif()
 
 ament_export_include_directories(
   include
