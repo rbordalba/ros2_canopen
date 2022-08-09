@@ -121,6 +121,7 @@ private:
     std::string bus_config_;
     std::string dcf_bin_;
     std::string can_interface_name_;
+    std::string node_namespace_;
 
     void set_executor(const std::weak_ptr<rclcpp::Executor> executor);
     void add_node_to_executor(const std::string &driver_name, const uint8_t node_id, const std::string &node_name);

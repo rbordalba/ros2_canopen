@@ -1,7 +1,7 @@
 //    Copyright 2022 Harshavadan Deshpande
 //                   Christoph Hellmann Santos
 //
-//    Licensed under the Apache License, Version 2.0 (the "License");
+//    Licensed under the Apache Licensadd_driver_to_mastere, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
 //    You may obtain a copy of the License at
 //
@@ -84,7 +84,10 @@ bool DeviceManager::load_component(std::string &package_name, std::string &drive
             std::vector<std::string> remap_rules;
             remap_rules.push_back("--ros-args");
             remap_rules.push_back("-r");
+            remap_rules.push_back(std::string("__ns:=") + DeviceManager::get_namespace());
+            remap_rules.push_back("-r");
             remap_rules.push_back("__node:=" + node_name);
+            
             opts.arguments(remap_rules);
 
             try
@@ -216,6 +219,8 @@ bool DeviceManager::init()
     this->get_parameter("master_config", dcf_txt_);
     this->get_parameter("master_bin", dcf_bin_);
     this->get_parameter("bus_config", bus_config_);
+
+    node_namespace_ = DeviceManager::get_namespace();
 
     this->config_ = std::make_shared<ros2_canopen::ConfigurationManager>(bus_config_);
     this->config_->init_config();
