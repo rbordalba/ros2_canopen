@@ -56,7 +56,7 @@ CanopenSystem::~CanopenSystem() {
     spin_thread_.reset();
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_init(
+CallbackReturn CanopenSystem::on_init(
   const hardware_interface::HardwareInfo & info)
 {
   if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS) {
@@ -237,7 +237,7 @@ std::vector<hardware_interface::CommandInterface> CanopenSystem::export_command_
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_activate(
+CallbackReturn CanopenSystem::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to receive commands
@@ -246,7 +246,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_activate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_deactivate(
+CallbackReturn CanopenSystem::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to stop receiving commands
@@ -254,8 +254,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type CanopenSystem::read(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type CanopenSystem::read()
 {
   // TODO(anyone): read robot states
 
@@ -267,8 +266,7 @@ hardware_interface::return_type CanopenSystem::read(
     return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type CanopenSystem::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type CanopenSystem::write()
 {
   // TODO(anyone): write robot's commands'
 
