@@ -121,6 +121,11 @@ void MotionControllerDriver::handle_set_target(
     }
 }
 
+void MotionControllerDriver::set_target(const std_msgs::msg::Float64::SharedPtr msg)
+{
+    target_ = msg->data;
+}
+
 void MotionControllerDriver::publish(){
     std_msgs::msg::Float64 pos_msg;
     std_msgs::msg::Float64 speed_msg;
@@ -133,7 +138,10 @@ void MotionControllerDriver::publish(){
 
 void MotionControllerDriver::register_services()
 {
-    publish_actual_position = this->create_publisher<std_msgs::msg::Float64>("~/actual_position", 10);;
+    target_subscriber = this->create_subscription<std_msgs::msg::Float64>("~/target", 10, 
+    std::bind(&MotionControllerDriver::set_target, this, std::placeholders::_1));
+
+    publish_actual_position = this->create_publisher<std_msgs::msg::Float64>("~/actual_position", 10);
     publish_actual_speed = this->create_publisher<std_msgs::msg::Float64>("~/actual_speed", 10);
     handle_init_service = this->create_service<std_srvs::srv::Trigger>(
         std::string(this->get_name()).append("/init").c_str(),
@@ -190,6 +198,7 @@ void MotionControllerDriver::init(ev::Executor &exec,
     driver = std::static_pointer_cast<LelyBridge>(mc_driver_);
     motor_ = std::make_shared<Motor402>(std::string("motor"), mc_driver_);
     register_services();
+    target_ = 0.0;
 
     timer_group = this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     timer_ = this->create_wall_timer(

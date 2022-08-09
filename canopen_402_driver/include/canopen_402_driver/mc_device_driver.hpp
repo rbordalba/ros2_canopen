@@ -69,6 +69,8 @@ namespace ros2_canopen
          */
         void OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept override
         {
+            //std::cout << "OnRpdoWrite. Index: 0x" << std::hex <<  idx << std::endl;
+
             for (auto it = objs.begin(); it != objs.end(); ++it)
             {
                 std::shared_ptr<RemoteObject> obj = *it;
@@ -86,13 +88,28 @@ namespace ros2_canopen
 
             if(idx == 0x606C && subidx == 0x0)
             {
-                speed = rpdo_mapped[idx][subidx].Read<int32_t>();
+                //std::cout << "OnRpdoWrite. Value: " << (int32_t)rpdo_mapped[idx][subidx].Read<int32_t>() << std::endl;
+                speed = rpdo_mapped[idx][subidx].Read<int32_t>(); //*2.0*M_PI/4096.0;
             }
 
             if(idx == 0x6064 && subidx == 0x0)
             {
-                position = rpdo_mapped[idx][subidx].Read<int32_t>();
+                //std::cout << "OnRpdoWrite. Value: " << (int32_t)rpdo_mapped[idx][subidx].Read<int32_t>() << std::endl;
+                position = rpdo_mapped[idx][subidx].Read<int32_t>(); //*2.0*M_PI/4096.0;
             }
+
+            if(idx == 0x6041 && subidx == 0x0)
+            {
+                //std::cout << "OnRpdoWrite. Value: " << (int16_t)rpdo_mapped[idx][subidx].Read<int16_t>() << std::endl;
+            }
+
+            if(idx == 0x6061 && subidx == 0x0)
+            {
+                //std::cout << "OnRpdoWrite. Value: " << (int8_t)rpdo_mapped[idx][subidx].Read<int8_t>() << std::endl;
+            }
+
+
+
         }
 
         /**

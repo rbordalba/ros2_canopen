@@ -37,8 +37,10 @@ namespace ros2_canopen
         rclcpp::Service<canopen_interfaces::srv::COTargetDouble>::SharedPtr handle_set_target_service;
         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publish_actual_position;
         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publish_actual_speed;
+        rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr target_subscriber;
         rclcpp::CallbackGroup::SharedPtr timer_group;
         uint32_t period_ms_;
+        double target_;
         bool intialised;
         void register_services();
 
@@ -62,6 +64,12 @@ namespace ros2_canopen
                         std::chrono::milliseconds(period_ms_), std::bind(&MotionControllerDriver::run, this), timer_group);
             }
 
+            // set target at run 
+            if (active.load())
+            {
+                motor_->setTarget(target_);
+            }
+            
             motor_->handleRead();
             motor_->handleWrite();
             //motor_->handleDiag();
@@ -206,6 +214,15 @@ namespace ros2_canopen
         void handle_set_target(
             const canopen_interfaces::srv::COTargetDouble::Request::SharedPtr request,
             canopen_interfaces::srv::COTargetDouble::Response::SharedPtr response);
+
+        /**
+         * @brief Subscriber to target 
+         * 
+         * Subscribes to target .
+         * 
+         * @param [in] target 
+         */
+        void set_target(const std_msgs::msg::Float64::SharedPtr msg);
 
         /**
          * @brief Publishes actual position and speed
