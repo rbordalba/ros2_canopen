@@ -5,18 +5,19 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_lifecycle REQUIRED)
-find_package(hardware_interface)
-find_package(pluginlib)
-find_package(ros2_control_test_assets)
-find_package(ament_cmake_gmock REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(canopen_core REQUIRED)
-find_package(canopen_proxy_driver REQUIRED)
-find_package(canopen_402_driver REQUIRED)
-find_package(std_srvs REQUIRED)
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+  canopen_core
+  canopen_proxy_driver
+  canopen_402_driver
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
+  ros2_control_test_assets
+  std_srvs
+)
+
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_gmock REQUIRED)
@@ -38,17 +39,8 @@ target_include_directories(
   include
 )
 
-ament_target_dependencies(
-  canopen_ros2_control
-  hardware_interface
-  rclcpp
-  rclcpp_lifecycle
-  canopen_core
-  rclcpp_components
-  canopen_proxy_driver
-  canopen_402_driver
-  std_srvs
-)
+ament_target_dependencies(canopen_ros2_control ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
 # prevent pluginlib from using boost
 target_compile_definitions(canopen_ros2_control PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
@@ -89,14 +81,7 @@ ament_export_libraries(
   canopen_ros2_control
 )
 ament_export_dependencies(
-  hardware_interface
-  pluginlib
-  rclcpp
-  rclcpp_lifecycle
-  canopen_core
-  canopen_proxy_driver
-  canopen_402_driver
-  std_srvs
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
 ament_package()
