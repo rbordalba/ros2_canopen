@@ -6,17 +6,21 @@
   <description>ros2_control wrapper for ros2_canopen functionalities</description>
   <maintainer email="denis@stoglrobotics.de">Denis Stogl</maintainer>
   <maintainer email="lovro.ivanov@gmail.com">Lovro Ivanov</maintainer>
+  <maintainer email="yuanborong@hotmail.com">Borong Yuan</maintainer>
 
   <license>Apache-2.0</license>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
-  <depend>rclcpp</depend>
-  <depend>rclcpp_lifecycle</depend>
+  <depend>ament_cmake_gmock</depend>
+  <depend>canopen_core</depend>
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>rclcpp_lifecycle</depend>
   <depend>ros2_control_test_assets</depend>
-  <depend>ament_cmake_gmock</depend>
+  <depend>std_srvs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
