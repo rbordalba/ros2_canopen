@@ -46,6 +46,9 @@ class CanopenSystem : public hardware_interface::BaseInterface<hardware_interfac
 {
 public:
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
+  ~CanopenSystem();
+
+  TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
   return_type configure(const hardware_interface::HardwareInfo& info) override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
@@ -72,7 +75,13 @@ private:
 
   std::shared_ptr<DeviceContainerNode> device_manager_;
   std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor_;
+  std::shared_ptr<rclcpp_components::ComponentManager> component_manager_;
   std::shared_ptr<rclcpp::Node> node_;
+
+  std::unique_ptr<std::thread> spin_thread_;
+  std::unique_ptr<std::thread> init_thread_;
+  void spin();
+  void initDeviceManager();
 };
 
 }  // namespace canopen_ros2_control
