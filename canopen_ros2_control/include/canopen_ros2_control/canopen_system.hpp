@@ -25,6 +25,7 @@
 #ifndef CANOPEN_ROS2_CONTROL__CANOPEN_SYSTEM_HPP_
 #define CANOPEN_ROS2_CONTROL__CANOPEN_SYSTEM_HPP_
 
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -35,6 +36,7 @@
 #include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "canopen_core/device_container_node.hpp"
+#include "canopen_proxy_driver/canopen_proxy_driver.hpp"
 #include "canopen_ros2_control/visibility_control.h"
 
 namespace canopen_ros2_control
