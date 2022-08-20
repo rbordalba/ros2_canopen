@@ -1,4 +1,4 @@
-# Copyright (c) 2022, StoglRobotics
+# Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt)
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:

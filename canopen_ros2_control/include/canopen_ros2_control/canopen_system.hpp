@@ -1,5 +1,4 @@
-// Copyright (c) 2022, StoglRobotics
-// Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
+// Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,7 +34,7 @@
 #include "hardware_interface/base_interface.hpp"
 #include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
-#include "canopen_core/device_container_node.hpp"
+#include "canopen_core/device_container.hpp"
 #include "canopen_proxy_driver/canopen_proxy_driver.hpp"
 #include "canopen_ros2_control/visibility_control.h"
 
