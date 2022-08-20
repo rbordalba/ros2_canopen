@@ -19,10 +19,11 @@ ament_auto_find_build_dependencies()
 ament_auto_add_library(
   ${PROJECT_NAME} SHARED
   src/canopen_system.cpp
+  src/cia402_system.cpp
 )
 
 # prevent pluginlib from using boost
-target_compile_definitions(canopen_ros2_control PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
+target_compile_definitions(${PROJECT_NAME} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
 pluginlib_export_plugin_description_file(hardware_interface canopen_ros2_control.xml)
 

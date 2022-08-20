@@ -3,7 +3,14 @@
          type="canopen_ros2_control::CanopenSystem"
          base_class_type="hardware_interface::SystemInterface">
     <description>
-      ros2_control hardware interface.
+      ros2_control system interface.
+    </description>
+  </class>
+  <class name="canopen_ros2_control/CIA402System"
+         type="canopen_ros2_control::CIA402System"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      ros2_control cia402 interface.
     </description>
   </class>
 </library>
