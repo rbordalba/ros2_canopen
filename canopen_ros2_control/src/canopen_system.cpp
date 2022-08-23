@@ -59,7 +59,7 @@ CanopenSystem::~CanopenSystem() {
   clean();
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_init(
+CallbackReturn CanopenSystem::on_init(
   const hardware_interface::HardwareInfo & info)
 {
   if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS) {
@@ -77,7 +77,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_init(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_configure(
+CallbackReturn CanopenSystem::on_configure(
   const rclcpp_lifecycle::State &previous_state)
 {
   executor_ = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
@@ -100,14 +100,14 @@ hardware_interface::CallbackReturn CanopenSystem::on_configure(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_cleanup(
+CallbackReturn CanopenSystem::on_cleanup(
   const rclcpp_lifecycle::State &previous_state) {
   clean();
   return CallbackReturn::SUCCESS;
 
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_shutdown(
+CallbackReturn CanopenSystem::on_shutdown(
   const rclcpp_lifecycle::State &previous_state) {
   clean();
   return CallbackReturn::SUCCESS;
@@ -185,9 +185,9 @@ std::vector<hardware_interface::StateInterface> CanopenSystem::export_state_inte
 {
   std::vector<hardware_interface::StateInterface> state_interfaces;
   for (uint i = 0; i < info_.joints.size(); i++) {
-    state_interfaces.emplace_back(hardware_interface::StateInterface(
+    //state_interfaces.emplace_back(hardware_interface::StateInterface(
       // TODO(anyone): insert correct interfaces
-      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
+      //info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
 
       if(info_.joints[i].parameters.find("node_id") == info_.joints[i].parameters.end())
       {
@@ -221,9 +221,9 @@ std::vector<hardware_interface::CommandInterface> CanopenSystem::export_command_
 {
   std::vector<hardware_interface::CommandInterface> command_interfaces;
   for (uint i = 0; i < info_.joints.size(); i++) {
-    command_interfaces.emplace_back(hardware_interface::CommandInterface(
+    //command_interfaces.emplace_back(hardware_interface::CommandInterface(
       // TODO(anyone): insert correct interfaces
-      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
+      //info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
 
       if(info_.joints[i].parameters.find("node_id") == info_.joints[i].parameters.end())
       {
@@ -258,7 +258,7 @@ std::vector<hardware_interface::CommandInterface> CanopenSystem::export_command_
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_activate(
+CallbackReturn CanopenSystem::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to receive commands
@@ -267,7 +267,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_activate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_deactivate(
+CallbackReturn CanopenSystem::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to stop receiving commands
@@ -275,8 +275,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type CanopenSystem::read(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type CanopenSystem::read()
 {
   // TODO(anyone): read robot states
 
@@ -288,29 +287,30 @@ hardware_interface::return_type CanopenSystem::read(
     return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type CanopenSystem::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type CanopenSystem::write()
 {
   // TODO(anyone): write robot's commands'
 
   for(auto it = canopen_data_.begin(); it!=canopen_data_.end(); ++it){
       auto proxy_driver =  std::static_pointer_cast<ros2_canopen::ProxyDriver>(device_manager_->get_node(it->first));
 
+      /*
       // reset node nmt
       if(it->second.nmt_state.reset_command()){
           proxy_driver->reset_node_nmt_command();
       }
-
+      
       // start nmt
       if(it->second.nmt_state.start_command()){
           proxy_driver->start_nmt_command();
       }
-
+      
       // tpdo data one shot mechanism
       if(it->second.tpdo_data.write_command()){
           it->second.tpdo_data.prepare_data();
           proxy_driver->tpdo_transmit(it->second.tpdo_data.original_data);
       }
+      */
   }
 
   return hardware_interface::return_type::OK;

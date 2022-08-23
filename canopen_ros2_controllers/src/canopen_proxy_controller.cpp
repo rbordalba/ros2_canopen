@@ -74,7 +74,7 @@ namespace canopen_ros2_controllers
 {
 CanopenProxyController::CanopenProxyController() : controller_interface::ControllerInterface() {}
 
-controller_interface::CallbackReturn CanopenProxyController::on_init()
+CallbackReturn CanopenProxyController::on_init()
 {
 
   try {
@@ -82,13 +82,13 @@ controller_interface::CallbackReturn CanopenProxyController::on_init()
     auto_declare<std::string>("joint", joint_name_);
   } catch (const std::exception & e) {
     fprintf(stderr, "Exception thrown during init stage with message: %s \n", e.what());
-    return controller_interface::CallbackReturn::ERROR;
+    return CallbackReturn::ERROR;
   }
 
-  return controller_interface::CallbackReturn::SUCCESS;
+  return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn CanopenProxyController::on_configure(
+CallbackReturn CanopenProxyController::on_configure(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   auto error_if_empty = [&](const auto & parameter, const char * parameter_name) {
@@ -113,7 +113,7 @@ controller_interface::CallbackReturn CanopenProxyController::on_configure(
 
   if (
           get_string_param_and_error_if_empty(joint_name_, "joint")) {
-    return controller_interface::CallbackReturn::ERROR;
+    return CallbackReturn::ERROR;
   }
 
   // Command Subscriber and callbacks
@@ -143,7 +143,7 @@ controller_interface::CallbackReturn CanopenProxyController::on_configure(
     fprintf(
       stderr, "Exception thrown during publisher creation at configure stage with message : %s \n",
       e.what());
-    return controller_interface::CallbackReturn::ERROR;
+    return CallbackReturn::ERROR;
   }
 
   nmt_state_rt_publisher_->lock();
@@ -218,7 +218,7 @@ controller_interface::CallbackReturn CanopenProxyController::on_configure(
           rmw_qos_profile_services_hist_keep_all);
 
   RCLCPP_INFO(get_node()->get_logger(), "configure successful");
-  return controller_interface::CallbackReturn::SUCCESS;
+  return CallbackReturn::SUCCESS;
 }
 
 controller_interface::InterfaceConfiguration CanopenProxyController::command_interface_configuration() const
@@ -253,16 +253,16 @@ controller_interface::InterfaceConfiguration CanopenProxyController::state_inter
   return state_interfaces_config;
 }
 
-controller_interface::CallbackReturn CanopenProxyController::on_activate(
+CallbackReturn CanopenProxyController::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // Set default value in command
   reset_controller_command_msg(*(input_cmd_.readFromRT)(), joint_name_);
 
-  return controller_interface::CallbackReturn::SUCCESS;
+  return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn CanopenProxyController::on_deactivate(
+CallbackReturn CanopenProxyController::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
 
@@ -270,7 +270,7 @@ controller_interface::CallbackReturn CanopenProxyController::on_deactivate(
   for (size_t i = 0; i < command_interfaces_.size(); ++i) {
     command_interfaces_[i].set_value(std::numeric_limits<double>::quiet_NaN());
   }
-  return controller_interface::CallbackReturn::SUCCESS;
+  return CallbackReturn::SUCCESS;
 }
 
 controller_interface::return_type CanopenProxyController::update(

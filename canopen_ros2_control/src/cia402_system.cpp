@@ -37,7 +37,7 @@ Cia402System::~Cia402System() {
 
 }
 
-hardware_interface::CallbackReturn Cia402System::on_init(
+CallbackReturn Cia402System::on_init(
   const hardware_interface::HardwareInfo & info)
 {
 
@@ -45,6 +45,12 @@ hardware_interface::CallbackReturn Cia402System::on_init(
         return CallbackReturn::ERROR;
     }
 
+   auto data = get_canopen_data();
+
+  for(auto it = data.begin(); it!=data.end(); ++it) {
+      auto motion_controller_driver = std::static_pointer_cast<ros2_canopen::MotionControllerDriver>(
+              get_device_manager()->get_node(it->first));      
+  }
 
   return CallbackReturn::SUCCESS;
 }
@@ -68,10 +74,10 @@ std::vector<hardware_interface::StateInterface> Cia402System::export_state_inter
       const uint8_t node_id = static_cast<uint8_t >(std::stoi(info_.joints[i].parameters["node_id"]));
 
       // actual position
-      state_interfaces.emplace_back(hardware_interface::StateInterface(info_.joints[i].name, "actual_position",
+      state_interfaces.emplace_back(hardware_interface::StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION,
                                                                        &motor_data_[node_id].actual_position));
       // actual speed
-      state_interfaces.emplace_back(hardware_interface::StateInterface(info_.joints[i].name, "actual_speed",
+      state_interfaces.emplace_back(hardware_interface::StateInterface(info_.joints[i].name, hardware_interface::HW_IF_VELOCITY,
               &motor_data_[node_id].actual_speed));
   }
 
@@ -94,6 +100,9 @@ std::vector<hardware_interface::CommandInterface> Cia402System::export_command_i
       }
 
       const uint8_t node_id = static_cast<uint8_t >(std::stoi(info_.joints[i].parameters["node_id"]));
+
+      command_interfaces.emplace_back(hardware_interface::CommandInterface(
+          info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &motor_data_[node_id].target.value));
 
       // init
       command_interfaces.emplace_back(hardware_interface::CommandInterface(info_.joints[i].name, "init_cmd",
@@ -141,28 +150,27 @@ std::vector<hardware_interface::CommandInterface> Cia402System::export_command_i
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn Cia402System::on_activate(
+CallbackReturn Cia402System::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to receive commands
 
-  return hardware_interface::CallbackReturn::SUCCESS;
+  return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn Cia402System::on_deactivate(
+CallbackReturn Cia402System::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to stop receiving commands
 
-  return hardware_interface::CallbackReturn::SUCCESS;
+  return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type Cia402System::read(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type Cia402System::read()
 {
   // TODO(anyone): read robot states
 
-   auto ret_val = CanopenSystem::read(time, period);
+   auto ret_val = CanopenSystem::read();
 
    auto data = get_canopen_data();
 
@@ -180,13 +188,18 @@ hardware_interface::return_type Cia402System::read(
     return ret_val;
 }
 
-hardware_interface::return_type Cia402System::write(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type Cia402System::write()
 {
   // TODO(anyone): write robot's commands'
 
-    auto ret_val = CanopenSystem::write(time, period);
+    auto ret_val = CanopenSystem::write();
+    auto data = get_canopen_data();
 
+    for(auto it = data.begin(); it!=data.end(); ++it) {
+      auto motion_controller_driver =  std::static_pointer_cast<ros2_canopen::MotionControllerDriver>(
+            get_device_manager()->get_node(it->first));
+
+    }
     return ret_val;
 }
 

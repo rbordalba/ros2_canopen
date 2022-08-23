@@ -42,6 +42,7 @@ static constexpr size_t STATE_MY_ITFS = 0;
 // name constants for command interfaces
 static constexpr size_t CMD_MY_ITFS = 0;
 
+using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 class CanopenProxyController : public controller_interface::ControllerInterface
 {
@@ -50,7 +51,7 @@ public:
   CanopenProxyController();
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_init() override;
+  CallbackReturn on_init() override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
   controller_interface::InterfaceConfiguration command_interface_configuration() const override;
@@ -59,15 +60,15 @@ public:
   controller_interface::InterfaceConfiguration state_interface_configuration() const override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_configure(
+  CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_activate(
+  CallbackReturn on_activate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_deactivate(
+  CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC

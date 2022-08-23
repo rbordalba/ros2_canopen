@@ -72,7 +72,7 @@ public:
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
     ~Cia402System();
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-    hardware_interface::CallbackReturn on_init(
+    CallbackReturn on_init(
             const hardware_interface::HardwareInfo & info);
 
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
@@ -82,20 +82,18 @@ public:
     std::vector<hardware_interface::CommandInterface> export_command_interfaces();
 
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-    hardware_interface::CallbackReturn on_activate(
+    CallbackReturn on_activate(
             const rclcpp_lifecycle::State & previous_state);
 
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-    hardware_interface::CallbackReturn on_deactivate(
+    CallbackReturn on_deactivate(
             const rclcpp_lifecycle::State & previous_state);
 
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-    hardware_interface::return_type read(
-            const rclcpp::Time & time, const rclcpp::Duration & period);
+    hardware_interface::return_type read();
 
     TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
-    hardware_interface::return_type write(
-            const rclcpp::Time & time, const rclcpp::Duration & period);
+    hardware_interface::return_type write();
 
     // can stuff
     std::map<uint, MotorNodeData> motor_data_;
