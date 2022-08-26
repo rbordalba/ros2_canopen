@@ -174,6 +174,7 @@ void MotionControllerDriver::init(ev::Executor& exec, canopen::AsyncMaster& mast
   mc_driver_ = std::make_shared<MCDeviceDriver>(exec, master, node_id);
   driver = std::static_pointer_cast<LelyBridge>(mc_driver_);
   motor_ = std::make_shared<Motor402>(mc_driver_);
+  driver->Boot();
 
   auto period = this->config_->get_entry<uint32_t>(std::string(this->get_name()), std::string("period"));
   if (!period.has_value())
@@ -188,9 +189,61 @@ void MotionControllerDriver::init(ev::Executor& exec, canopen::AsyncMaster& mast
     timer_group = this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     timer_ = this->create_wall_timer(2000ms, std::bind(&MotionControllerDriver::run, this), timer_group);
   }
+}
 
-  driver->Boot();
+bool MotionControllerDriver::command_mode_switch(uint16_t mode)
+{
+  if (motor_->getMode() != mode)
+  {
+    active.store(false);
+    if (!motor_->enterModeAndWait(mode))
+    {
+      return false;
+    }
+  }
   active.store(true);
+  return true;
+}
+
+void MotionControllerDriver::start()
+{
+  if (!intialised)
+  {
+    RCLCPP_INFO(this->get_logger(), "Intitialising Device and Objects");
+    motor_->registerDefaultModes();
+    motor_->handleInit();
+    mc_driver_->validate_objs();
+    intialised = true;
+  }
+  else
+  {
+    motor_->handleRecover();
+    active.store(true);
+  }
+}
+
+void MotionControllerDriver::stop()
+{
+  active.store(false);
+  motor_->handleHalt();
+}
+
+void MotionControllerDriver::read(double& position, double& velocity)
+{
+  position = mc_driver_->get_position();
+  velocity = mc_driver_->get_speed();
+}
+
+bool MotionControllerDriver::write(double& target)
+{
+  if (active.load())
+  {
+    return motor_->setTarget(target);
+  }
+  else
+  {
+    return true;
+  }
 }
 
 #include "rclcpp_components/register_node_macro.hpp"
